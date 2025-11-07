@@ -17,8 +17,9 @@ public class CORSConfig {
                         .allowedOrigins(
                             "https://8080-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io",
                             "https://8081-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io",
-                            "http://localhost:3000",
-                            "http://localhost:8080"
+                                    "http://localhost:3000",
+                                    "http://localhost:8080",
+                                    "http://localhost:8081"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")

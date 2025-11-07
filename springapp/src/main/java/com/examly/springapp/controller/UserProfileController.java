@@ -5,6 +5,7 @@ import com.examly.springapp.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -16,6 +17,9 @@ public class UserProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private Long getCurrentUserId(Authentication authentication) {
         String email = authentication.getName();
@@ -49,7 +53,7 @@ public class UserProfileController {
     public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordData, Authentication authentication) {
         try {
             Long userId = getCurrentUserId(authentication);
-            User updatedUser = userService.changePassword(userId, passwordData.get("newPassword"));
+            User updatedUser = userService.changePassword(userId, passwordData.get("newPassword"), passwordEncoder);
             return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

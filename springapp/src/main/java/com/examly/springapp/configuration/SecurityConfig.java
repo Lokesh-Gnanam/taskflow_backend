@@ -27,12 +27,14 @@ import java.util.Arrays;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
-    @Lazy
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    // Use constructor injection instead of field injection
+    public SecurityConfig(UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -64,8 +66,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/api/info").permitAll()
                 .requestMatchers("/api/test").permitAll()
-                .requestMatchers("/api/auth/**","/swagger-ui/index.html","/swagger-ui/**","/v3/api-docs/**").permitAll()
-
+                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 
                 // Protected admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

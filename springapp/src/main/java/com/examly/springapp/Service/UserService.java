@@ -20,8 +20,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // Remove the PasswordEncoder dependency from UserService
+    // It will be handled in AuthController during registration
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -35,7 +35,7 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public User registerUser(User user) {
+    public User registerUser(User user, PasswordEncoder passwordEncoder) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
@@ -77,7 +77,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User changePassword(Long userId, String newPassword) {
+    public User changePassword(Long userId, String newPassword, PasswordEncoder passwordEncoder) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
@@ -89,27 +89,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(userId);
     }
 
-    // NEW: Update user role method
     public User updateUserRole(Long userId, User.Role newRole) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
         
-        // Prevent modifying your own role
-        User currentUser = getCurrentUser(); // You'll need to implement this method
-        if (currentUser != null && currentUser.getId().equals(userId)) {
-            throw new RuntimeException("You cannot modify your own role");
-        }
-        
         user.setRole(newRole);
         return userRepository.save(user);
     }
-
-    // Helper method to get current user (you may need to implement this based on your auth setup)
-    private User getCurrentUser() {
-        // This is a simplified version - you'll need to implement based on your authentication setup
-        // You might get the current user from SecurityContext
-        return null; // Implement based on your authentication setup
-    }
 }
-
-

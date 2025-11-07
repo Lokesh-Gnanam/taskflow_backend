@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.examly.springapp.model.Task;
 import com.examly.springapp.model.User;
 import com.examly.springapp.repository.TaskRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,12 @@ public class TaskService {
     }
 
     public List<Task> getTasksByUserAndDeadlineDate(User user, String deadlineDate) {
-        return taskRepository.findByUserAndDeadlineDateAndArchivedFalse(user, deadlineDate);
+        try {
+            LocalDate date = LocalDate.parse(deadlineDate);
+            return taskRepository.findByUserAndDeadlineDateAndArchivedFalse(user, date);
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
     public List<Task> searchTasks(User user, String searchTerm) {
@@ -39,7 +45,13 @@ public class TaskService {
     }
 
     public List<Task> getTasksByDateRange(User user, String startDate, String endDate) {
-        return taskRepository.findByUserAndDeadlineDateBetweenAndArchivedFalse(user, startDate, endDate);
+        try {
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+            return taskRepository.findByUserAndDeadlineDateBetweenAndArchivedFalse(user, start, end);
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
     public Optional<Task> getTaskById(Long id) {
