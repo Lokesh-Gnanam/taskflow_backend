@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: taskflow-backend
+    env: java
+    plan: free
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SPRING_MAIN_ALLOW_CIRCULAR_REFERENCES
+        value: "true"
+
+databases:
+  - name: taskflow-db
+    plan: free
+    databaseName: taskflow
+    user: taskflow_user
