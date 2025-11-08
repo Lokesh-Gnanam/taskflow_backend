@@ -1,11 +1,22 @@
-# Dockerfile
-FROM maven:3.9-amazoncorretto-17 AS builder
+
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM amazoncorretto:17-alpine
+# Runtime stage
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=builder --chown=spring:spring /app/target/SurveyApp-0.0.1-SNAPSHOT.jar app.jar
+
+# Create a non-root user for security
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
+# Copy the built JAR file
+COPY --from=builder --chown=spring:spring /app/target/*.jar app.jar
+
+# Expose port
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]    
