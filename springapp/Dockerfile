@@ -1,10 +1,10 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS builder
-WORKDIR /app/springapp
-COPY . .
+WORKDIR /app
+COPY springapp/ .
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=builder /app/springapp/target/*.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]
