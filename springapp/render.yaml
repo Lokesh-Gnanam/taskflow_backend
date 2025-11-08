@@ -15,4 +15,4 @@ services:
       - key: ADMIN_REGISTRATION_KEY
         value: "123456"
       - key: SPRING_MAIN_ALLOW_CIRCULAR_REFERENCES
-        value: "true"
+        value: "true" # allow circular references in the spring application
