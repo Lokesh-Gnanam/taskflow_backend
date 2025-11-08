@@ -11,3 +11,9 @@ services:
         value: prod
       - key: JAVA_OPTS
         value: -Xmx256m -Xss512k
+      - key: JWT_SECRET
+        value: 5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
+      - key: ADMIN_REGISTRATION_KEY
+        value: "123456"
+      - key: SPRING_MAIN_ALLOW_CIRCULAR_REFERENCES
+        value: "true"
