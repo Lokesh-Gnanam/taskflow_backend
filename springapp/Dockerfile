@@ -4,13 +4,13 @@ WORKDIR /app
 # Copy everything
 COPY . .
 
-# Fix permissions and make mvnw executable
-RUN chmod +x mvnw
-RUN ls -la pom.xml
-RUN ls -la src/
+# Debug: Show what files were copied
+RUN ls -la
+RUN find . -name "pom.xml" | head -5
+RUN find . -name "*.java" | head -5
 
-# Build
-RUN ./mvnw clean package -DskipTests
+# Use direct mvn command (not mvnw)
+RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
