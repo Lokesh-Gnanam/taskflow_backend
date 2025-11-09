@@ -3,7 +3,6 @@ package com.examly.springapp.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +30,6 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
 
-    // Use constructor injection instead of field injection
     public SecurityConfig(UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
@@ -66,7 +65,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/api/info").permitAll()
                 .requestMatchers("/api/test").permitAll()
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 
                 // Protected admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -87,13 +87,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-            "https://8080-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io",
-            "https://8081-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io",
-            "http://localhost:3000",
-            "http://localhost:8080",
-            "https://taskflow-todoapp.vercel.app"
+        
+        // Production domains
+        configuration.setAllowedOriginPatterns(List.of(
+            "https://taskflow-todoapp.vercel.app",
+            "https://*.vercel.app",
+            "https://*.onrender.com"
         ));
+        
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList(
             "Authorization", 
@@ -102,11 +103,14 @@ public class SecurityConfig {
             "Accept", 
             "Origin", 
             "Access-Control-Request-Method", 
-            "Access-Control-Request-Headers"
+            "Access-Control-Request-Headers",
+            "X-Forwarded-Proto",
+            "X-Forwarded-Host"
         ));
         configuration.setExposedHeaders(Arrays.asList(
             "Access-Control-Allow-Origin", 
-            "Access-Control-Allow-Credentials"
+            "Access-Control-Allow-Credentials",
+            "Authorization"
         ));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);

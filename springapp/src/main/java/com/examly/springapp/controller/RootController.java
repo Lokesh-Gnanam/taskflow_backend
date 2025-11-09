@@ -12,6 +12,7 @@ public class RootController {
                 "application": "Advanced Todo App with Calendar & Reminders",
                 "status": "Running",
                 "version": "1.0.0",
+                "environment": "%s",
                 "timestamp": "%s",
                 "endpoints": {
                     "health": "/api/health",
@@ -20,8 +21,13 @@ public class RootController {
                     "login": "/api/auth/login",
                     "tasks": "/api/tasks/**"
                 },
-                "message": "Welcome to Todo App API - Server is running on port 8080"
+                "message": "Welcome to Todo App API - Server is running successfully"
             }
-            """.formatted(java.time.LocalDateTime.now());
+            """.formatted(getEnvironment(), java.time.LocalDateTime.now());
+    }
+    
+    private String getEnvironment() {
+        String profile = System.getenv("SPRING_PROFILES_ACTIVE");
+        return profile != null ? profile : "development";
     }
 }
