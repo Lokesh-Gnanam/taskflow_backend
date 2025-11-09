@@ -91,7 +91,8 @@ public class SecurityConfig {
             "https://8080-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io",
             "https://8081-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io",
             "http://localhost:3000",
-            "http://localhost:8080"
+            "http://localhost:8080",
+            "https://taskflow-todoapp.vercel.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList(

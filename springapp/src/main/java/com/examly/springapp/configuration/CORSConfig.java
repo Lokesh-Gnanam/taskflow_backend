@@ -19,7 +19,8 @@ public class CORSConfig {
                             "https://8081-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io",
                                     "http://localhost:3000",
                                     "http://localhost:8080",
-                                    "http://localhost:8081"
+                                    "http://localhost:8081",
+                                    "https://taskflow-todoapp.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
