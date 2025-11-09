@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "https://8081-ffaecebdaabfcecbbeafafdaebbadedff.premiumproject.examly.io")
+@CrossOrigin(origins = "https://taskflow-todoapp.vercel.app")
 public class UserProfileController {
 
     @Autowired
